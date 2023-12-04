@@ -1,9 +1,13 @@
 # Using Mel-frequency cepstral coefficients (MFCCs).
 # from Librosa for voice processing and recognition
 
-import os
+# processing.py
+
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
 import librosa
 import numpy as np
+import os
 
 def extract_mfcc(audio_file):
     # Load audio file using librosa
@@ -31,8 +35,16 @@ def extract_mfcc_from_folder(folder_path):
     
     return np.array(mfcc_features)
 
-# Example usage: Extract MFCCs from all audio files in the 'recordings' folder
-folder_path = 'recordings'
-all_mfcc_features = extract_mfcc_from_folder(folder_path)
-print("All MFCC features shape:", all_mfcc_features.shape)
-print(all_mfcc_features)
+def train_svm_model(X, y):
+    # Split the data into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # Initialize the SVM classifier
+    svm_classifier = SVC(kernel='linear')
+
+    # Train the SVM classifier
+    svm_classifier.fit(X_train, y_train)
+
+    # Evaluate the trained model
+    accuracy = svm_classifier.score(X_test, y_test)
+    return svm_classifier, accuracy
