@@ -3,8 +3,10 @@
 
 # processing.py
 
+# processing.py
+
 from sklearn.model_selection import train_test_split
-from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
 import librosa
 import numpy as np
 import os
@@ -35,16 +37,16 @@ def extract_mfcc_from_folder(folder_path):
     
     return np.array(mfcc_features)
 
-def train_svm_model(X, y):
+def train_knn_model(X, y):
     # Split the data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    # Initialize the SVM classifier
-    svm_classifier = SVC(kernel='linear')
+    # Initialize the KNN classifier
+    knn_classifier = KNeighborsClassifier(n_neighbors=5)  # You can adjust the number of neighbors
 
-    # Train the SVM classifier
-    svm_classifier.fit(X_train, y_train)
+    # Train the KNN classifier
+    knn_classifier.fit(X_train, y_train)
 
     # Evaluate the trained model
-    accuracy = svm_classifier.score(X_test, y_test)
-    return svm_classifier, accuracy
+    accuracy = knn_classifier.score(X_test, y_test)
+    return knn_classifier, accuracy
