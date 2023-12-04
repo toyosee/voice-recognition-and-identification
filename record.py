@@ -1,3 +1,6 @@
+# Author: Elijah Abolaji
+# Version: 1.0
+
 import os
 import pyaudio
 import wave
