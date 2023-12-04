@@ -1,4 +1,4 @@
-# Your main file
+# Main file
 import os
 import processing
 from file_identities import file_identities

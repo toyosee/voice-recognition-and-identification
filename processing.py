@@ -3,8 +3,6 @@
 
 # processing.py
 
-# processing.py
-
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 import librosa
@@ -12,13 +10,13 @@ import numpy as np
 import os
 
 def extract_mfcc(audio_file):
-    # Load audio file using librosa
+    # Loading audio file using librosa
     audio_data, sr = librosa.load(audio_file, sr=None)
     
-    # Extract MFCCs
+    # Extracting MFCCs
     mfccs = librosa.feature.mfcc(y=audio_data, sr=sr, n_mfcc=13)
     
-    # Calculate the mean of MFCC coefficients along the time axis
+    # Calculating the mean of MFCC coefficients along the time axis
     mfccs_mean = np.mean(mfccs.T, axis=0)
     
     return mfccs_mean

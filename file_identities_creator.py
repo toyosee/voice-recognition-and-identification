@@ -14,7 +14,7 @@ def create_identities_dict(folder_path):
 
 def save_identities_dict_as_script(file_identities):
     with open('file_identities.py', 'w') as file:
-        file.write("file_identities = {\n")
+        file.write("#All audio files are mapped here as dictionary \n\nfile_identities = {\n")
         for key, value in file_identities.items():
             file.write(f"    '{key}': '{value}',\n")
         file.write("}\n")

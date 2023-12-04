@@ -1,3 +1,5 @@
+#Files are mapped here as dictionary 
+
 file_identities = {
     'sample.wav': 'sample',
     'sample2.wav': 'sample2',
