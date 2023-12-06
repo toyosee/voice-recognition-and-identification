@@ -1,30 +1,42 @@
 import os
+import sqlite3
 
-def create_identities_dict(folder_path):
-    file_identities = {}
+def fetch_names_from_database():
+    conn = sqlite3.connect('voice_database.db')  # Replace 'voice_database.db' with your actual database file
     
-    audio_files = [f for f in os.listdir(folder_path) if f.endswith('.wav')]
+    cursor = conn.cursor()
     
-    for file in audio_files:
-        # Extract identity (class) from the filename (assuming the name before '.wav' is the identity)
-        identity = file.split('.')[0]  # Extract the identity from the filename (sample.wav -> 'sample')
-        file_identities[file] = identity
+    cursor.execute("SELECT ID, Name FROM Users")
+    user_rows = cursor.fetchall()
     
-    return file_identities
+    cursor.execute("SELECT UserID, FilePath FROM Recordings")
+    recording_rows = cursor.fetchall()
+    
+    conn.close()
+   
+    users_dict = {user_id: name for user_id, name in user_rows}
+    
+    # Collect all recordings for each user using a dictionary of lists
+    recordings_dict = {user_id: [] for user_id in users_dict}
+    for user_id, file_path in recording_rows:
+        recordings_dict[user_id].append(os.path.basename(file_path))
+    
+    # Combine the information using a dictionary comprehension
+    names_dict = {user_id: recordings_dict[user_id] for user_id in users_dict}
+    print(names_dict)
+    
+    return names_dict
 
 def save_identities_dict_as_script(file_identities):
     with open('file_identities.py', 'w') as file:
-        file.write("#All audio files are mapped here as dictionary \n\nfile_identities = {\n")
+        file.write("# All audio files are mapped here as a dictionary\n\nfile_identities = {\n")
         for key, value in file_identities.items():
-            file.write(f"    '{key}': '{value}',\n")
+            file.write(f"    '{key}': {value},\n")
         file.write("}\n")
 
 if __name__ == "__main__":
-    # Replace 'recordings' with the path to your audio files folder
-    folder_path = 'recordings'
+    folder_path = 'recordings'  # Replace 'recordings' with the path to your audio files folder
     
-    # Create the file_identities dictionary
-    file_identities = create_identities_dict(folder_path)
+    file_identities = fetch_names_from_database()
     
-    # Save the file_identities dictionary as a Python script
     save_identities_dict_as_script(file_identities)

@@ -1,21 +1,19 @@
-# Main file
 import os
 import processing
 from file_identities import file_identities
 
-# Extract MFCC features from the 'recordings' folder
 folder_path = 'recordings'
-all_mfcc_features = processing.extract_mfcc_from_folder(folder_path)
 
-# Create labels based on the filenames
-labels = [file_identities[file] for file in os.listdir(folder_path) if file.endswith('.wav')]
+all_features = []
+all_labels = []
 
-# Train a KNN model using the extracted MFCC features and labels
-knn_model, accuracy = processing.train_knn_model(all_mfcc_features, labels)
+for user_id, recordings in file_identities.items():
+    for recording in recordings:
+        file_path = os.path.join(folder_path, recording)
+        mfcc = processing.extract_mfcc(file_path)
+        all_features.append(mfcc)
+        all_labels.append(user_id)
 
-# Print the accuracy of the trained KNN model
+knn_model, accuracy = processing.train_knn_model(all_features, all_labels, n_neighbors=1)
+
 print(f"Accuracy of the KNN model: {accuracy * 100:.2f}%")
-
-
-
-
